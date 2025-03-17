@@ -1,6 +1,6 @@
 package com.example.blog.controller;
 
-import com.example.blog.entity.ResponseResult;
+import com.example.blog.model.dto.ResponseResult;
 import com.example.blog.service.NasaService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +16,7 @@ public class NasaController {
     }
 
     @GetMapping("/getNasaAPOD")
-    public ResponseResult getApod() {
-        return ResponseResult.success(nasaService.getApodData());
+    public ResponseResult<String> getApod() {
+        return nasaService.getApodData();
     }
 }
