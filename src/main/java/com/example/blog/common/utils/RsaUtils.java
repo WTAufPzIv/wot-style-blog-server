@@ -1,26 +1,43 @@
 package com.example.blog.common.utils;
 
-import org.apache.commons.codec.binary.Base64;
+import lombok.extern.slf4j.Slf4j;
 import javax.crypto.Cipher;
-import java.security.KeyFactory;
-import java.security.PrivateKey;
+import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Base64;
 
+@Slf4j
 public class RsaUtils {
-    public static String decrypt(String encryptedText, String privateKeyStr) throws Exception {
-        // Base64解码加密数据
-        byte[] encryptedBytes = Base64.decodeBase64(encryptedText);
+    private static final String RSA_ALGORITHM = "RSA";
+    private static final int KEY_SIZE = 2048;
 
-        // 生成私钥
-        byte[] keyBytes = Base64.decodeBase64(privateKeyStr);
+    // 加载私钥
+    public static PrivateKey loadPrivateKey(String privateKeyStr) throws Exception {
+        String cleanKey = privateKeyStr
+                .replace("-----BEGIN PRIVATE KEY-----", "")
+                .replace("-----END PRIVATE KEY-----", "")
+                .replaceAll("\\s+", "")
+                .replaceAll("\\n", "")
+                .replaceAll("\\r", "");
+        byte[] keyBytes = Base64.getDecoder().decode(cleanKey);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
-        PrivateKey privateKey = KeyFactory.getInstance("RSA").generatePrivate(keySpec);
+        KeyFactory keyFactory = KeyFactory.getInstance(RSA_ALGORITHM);
+        return keyFactory.generatePrivate(keySpec);
+    }
 
-        // 解密
-        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+    // RSA解密
+    public static String decrypt(String encryptedData, PrivateKey privateKey) throws Exception {
+        Cipher cipher = Cipher.getInstance(RSA_ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
-        byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
+//        log.info(encryptedData);
+        byte[] data = Base64.getDecoder().decode(encryptedData);
+        return new String(cipher.doFinal(data));
+    }
 
-        return new String(decryptedBytes, "UTF-8");
+    // 生成密钥对（用于测试）
+    public static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(RSA_ALGORITHM);
+        keyPairGenerator.initialize(KEY_SIZE);
+        return keyPairGenerator.generateKeyPair();
     }
 }

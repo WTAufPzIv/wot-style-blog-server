@@ -23,7 +23,7 @@ public class DecryptRequestWrapper extends HttpServletRequestWrapper {
         return new ServletInputStream() {
             @Override public boolean isFinished() { return bis.available() == 0; }
             @Override public boolean isReady() { return true; }
-            @Override public void setReadListener(ReadListener listener) {}
+            @Override public void setReadListener(ReadListener listener) { throw new UnsupportedOperationException(); }
             @Override public int read() { return bis.read(); }
         };
     }
