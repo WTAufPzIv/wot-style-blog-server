@@ -29,7 +29,6 @@ public class RsaUtils {
     public static String decrypt(String encryptedData, PrivateKey privateKey) throws Exception {
         Cipher cipher = Cipher.getInstance(RSA_ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
-//        log.info(encryptedData);
         byte[] data = Base64.getDecoder().decode(encryptedData);
         return new String(cipher.doFinal(data));
     }

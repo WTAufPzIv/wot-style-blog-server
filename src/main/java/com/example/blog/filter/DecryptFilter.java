@@ -1,11 +1,15 @@
 package com.example.blog.filter;
 
+import com.example.blog.common.exception.BusinessException;
 import com.example.blog.common.utils.RsaUtils;
 import com.example.blog.filter.wrapper.DecryptRequestWrapper;
+import com.example.blog.model.dto.ResponseResult;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,11 +46,20 @@ public class DecryptFilter implements Filter {
             "hswMaAkz506iRieG/+uzP/bN\n" +
             "-----END PRIVATE KEY-----";
 
+    private void resolveDecryptFilterError(HttpServletResponse httpResponse) throws IOException {
+        ResponseResult<Void> result = ResponseResult.error(500, "请求解析失败");
+        ObjectMapper objectMapper = new ObjectMapper();
+        httpResponse.setStatus(HttpStatus.OK.value());
+        httpResponse.setContentType("application/json;charset=UTF-8");
+        httpResponse.getWriter().write(objectMapper.writeValueAsString(result));
+    }
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+            throws IOException, ServletException, BusinessException {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         // 读取加密请求体
         StringBuilder encryptedBody = new StringBuilder();
@@ -58,12 +71,16 @@ public class DecryptFilter implements Filter {
         }
 
         // 解密处理
-        String decryptedBody;
+        String decryptedBody = "";
         try {
             decryptedBody = RsaUtils.decrypt(encryptedBody.toString(), RsaUtils.loadPrivateKey(privateKeyStr));
         } catch (Exception e) {
-            throw new ServletException("解密失败", e);
+            // 直接构造错误响应
+            log.error("请求解析失败：{}", e.getMessage());
+            resolveDecryptFilterError(httpResponse);
+            return;
         }
+
 
         DecryptRequestWrapper wrappedRequest = new DecryptRequestWrapper(httpRequest, decryptedBody);
         chain.doFilter(wrappedRequest, response);

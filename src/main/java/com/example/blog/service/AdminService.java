@@ -1,13 +1,12 @@
 package com.example.blog.service;
 
 import com.example.blog.common.exception.BusinessException;
+import com.example.blog.common.utils.MD5WithSalt;
 import com.example.blog.entity.Admin;
 import com.example.blog.model.dto.ResponseResult;
 import com.example.blog.repository.AdminRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
 
 @Service
 public class AdminService {
@@ -21,7 +20,7 @@ public class AdminService {
         Admin user = repository.findByUsername(username)
                 .orElseThrow(() -> new BusinessException(500, "用户不存在"));
 
-        if (!Objects.equals(user.getPassword(), password)) {
+        if (!MD5WithSalt.verifyPassword(password, user.getPassword())) {
             throw new BusinessException(500, "密码错误");
         }
 
@@ -38,5 +37,14 @@ public class AdminService {
             throw new BusinessException(500, "退出登录失败" + e.getMessage());
         }
 
+    }
+
+    public ResponseResult<Admin> checkLogin(HttpSession session) {
+        Admin admin = (Admin) session.getAttribute("currentUser");
+        if (admin == null) {
+            return ResponseResult.success(null);
+        } else {
+            return ResponseResult.success(admin);
+        }
     }
 }

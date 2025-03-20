@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     // 未知抛错
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.OK)
     public ResponseResult<Void> handleUnknowException(Exception ex) {
         log.error("系统异常: {}", ex.getMessage(), ex);
-        return ResponseResult.error(500, "系统异常");
+        return ResponseResult.error(500, "系统异常：" + ex.getMessage());
     }
 
     // 业务抛错
