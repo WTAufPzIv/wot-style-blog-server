@@ -48,11 +48,36 @@ public class NasaService {
         try {
             String url = "https://api.nasa.gov/planetary/apod?api_key=" + apiKey;
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-            NasaApod entity = new NasaApod();
             JsonNode rootNode = objectMapper.readTree(response.getBody());
             String RawText = rootNode.path("explanation").asText();
+            JsonNode optionalUrlNode = rootNode.path("url");
+            if (optionalUrlNode.isEmpty()) {
+                return fetchAndSaveFromApiByRandom(date);
+            } else {
+                String TransedText = transService.doTrans(RawText);
+                ObjectNode modifiedNode = (ObjectNode) rootNode;
+                modifiedNode.put("transedText", TransedText);
+                String modifiedJson = objectMapper.writeValueAsString(modifiedNode);
+                NasaApod entity = new NasaApod();
+                entity.setDate(date);
+                entity.setRawJson(modifiedJson);
+                repository.save(entity);
+                return modifiedJson;
+            }
+        } catch (Exception e) {
+            throw new BusinessException(500, "NASA数据获取失败");
+        }
+    }
+
+    private String fetchAndSaveFromApiByRandom(LocalDate date) {
+        try {
+            String url = "https://api.nasa.gov/planetary/apod?count=1&api_key=" + apiKey;
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+            NasaApod entity = new NasaApod();
+            JsonNode rootNode = objectMapper.readTree(response.getBody());
+            String RawText = rootNode.path(0).path("explanation").asText();
             String TransedText = transService.doTrans(RawText);
-            ObjectNode modifiedNode = (ObjectNode) rootNode;
+            ObjectNode modifiedNode = (ObjectNode) rootNode.path(0);
             modifiedNode.put("transedText", TransedText);
             String modifiedJson = objectMapper.writeValueAsString(modifiedNode);
             entity.setDate(date);
