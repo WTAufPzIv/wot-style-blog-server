@@ -2,10 +2,15 @@ package com.example.blog.service;
 
 import com.example.blog.common.exception.BusinessException;
 import com.example.blog.entity.NasaApod;
+import com.example.blog.service.TransService;
 import com.example.blog.model.dto.ResponseResult;
 import com.example.blog.repository.NasaApodRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.time.LocalDate;
@@ -15,13 +20,17 @@ import java.util.Optional;
 public class NasaService {
     private final RestTemplate restTemplate;
     private final NasaApodRepository repository;
+    private final ObjectMapper objectMapper;
+    private final TransService transService;
 
     @Value("${nasa.api.key}")
     private String apiKey;
 
-    public NasaService(RestTemplateBuilder builder, NasaApodRepository repository) {
+    public NasaService(RestTemplateBuilder builder, NasaApodRepository repository, ObjectMapper objectMapper,  TransService transService) {
         this.restTemplate = builder.build();
         this.repository = repository;
+        this.objectMapper = objectMapper;
+        this.transService = transService;
     }
 
     public ResponseResult<String> getApodData() {
@@ -38,12 +47,18 @@ public class NasaService {
     private String fetchAndSaveFromApi(LocalDate date) {
         try {
             String url = "https://api.nasa.gov/planetary/apod?api_key=" + apiKey;
-            String response = restTemplate.getForObject(url, String.class);
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
             NasaApod entity = new NasaApod();
+            JsonNode rootNode = objectMapper.readTree(response.getBody());
+            String RawText = rootNode.path("explanation").asText();
+            String TransedText = transService.doTrans(RawText);
+            ObjectNode modifiedNode = (ObjectNode) rootNode;
+            modifiedNode.put("transedText", TransedText);
+            String modifiedJson = objectMapper.writeValueAsString(modifiedNode);
             entity.setDate(date);
-            entity.setRawJson(response);
+            entity.setRawJson(modifiedJson);
             repository.save(entity);
-            return response;
+            return modifiedJson;
         } catch (Exception e) {
             throw new BusinessException(500, "NASA数据获取失败");
         }

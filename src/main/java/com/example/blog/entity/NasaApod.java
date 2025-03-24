@@ -23,6 +23,11 @@ public class NasaApod {
     @Column(columnDefinition = "TEXT")
     private String rawJson;
 
+    @Getter
+    @Setter
+    @Column(columnDefinition = "TEXT")
+    private String transedText;
+
     public void setDate(LocalDate updateTime) {
         this.updateTime = updateTime;
     }
