@@ -7,8 +7,8 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "nasa")
-public class NasaApod {
+@Table(name = "harvard")
+public class HarvardMuseums {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

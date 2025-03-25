@@ -2,7 +2,6 @@ package com.example.blog.service;
 
 import com.example.blog.common.exception.BusinessException;
 import com.example.blog.entity.NasaApod;
-import com.example.blog.service.TransService;
 import com.example.blog.model.dto.ResponseResult;
 import com.example.blog.repository.NasaApodRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -50,8 +49,8 @@ public class NasaService {
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
             JsonNode rootNode = objectMapper.readTree(response.getBody());
             String RawText = rootNode.path("explanation").asText();
-            JsonNode optionalUrlNode = rootNode.path("url");
-            if (optionalUrlNode.isEmpty()) {
+            String optionalUrlStr = rootNode.path("url").asText();
+            if (optionalUrlStr.isEmpty()) {
                 return fetchAndSaveFromApiByRandom(date);
             } else {
                 String TransedText = transService.doTrans(RawText);
@@ -59,7 +58,7 @@ public class NasaService {
                 modifiedNode.put("transedText", TransedText);
                 String modifiedJson = objectMapper.writeValueAsString(modifiedNode);
                 NasaApod entity = new NasaApod();
-                entity.setDate(date);
+                entity.setUpdateTime(date);
                 entity.setRawJson(modifiedJson);
                 repository.save(entity);
                 return modifiedJson;
@@ -80,7 +79,7 @@ public class NasaService {
             ObjectNode modifiedNode = (ObjectNode) rootNode.path(0);
             modifiedNode.put("transedText", TransedText);
             String modifiedJson = objectMapper.writeValueAsString(modifiedNode);
-            entity.setDate(date);
+            entity.setUpdateTime(date);
             entity.setRawJson(modifiedJson);
             repository.save(entity);
             return modifiedJson;
