@@ -58,6 +58,13 @@ public class HarvardMuseumsService {
                 // 如果为空，则抛出异常
                 throw new BusinessException(500, "HarvardMusiums数据获取为空");
             } else {
+                // 极端情况下有可能直接没有图片
+                JsonNode imagesNode = optionalRecordNode.path("images");
+                if (imagesNode.isMissingNode()       // 字段不存在
+                        || imagesNode.isNull()           // 字段值为null
+                        || (imagesNode.isArray() && imagesNode.isEmpty())) { // 空数组
+                    throw new BusinessException(500, "HarvardMusiums图片信息缺失");
+                }
                 // 待翻译列表
                 ArrayList<String> rawTextList = new ArrayList<>();
                 rawTextList.add(Objects.equals(optionalRecordNode.path("title").asText(), "null") ? "" : optionalRecordNode.path("title").asText());
