@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -50,7 +51,8 @@ public class NasaService {
             JsonNode rootNode = objectMapper.readTree(response.getBody());
             String RawText = rootNode.path("explanation").asText();
             String optionalUrlStr = rootNode.path("url").asText();
-            if (optionalUrlStr.isEmpty()) {
+            String mediaTypeStr = rootNode.path("media_type").asText();
+            if (optionalUrlStr.isEmpty() || Objects.equals(mediaTypeStr, "video")) {
                 return fetchAndSaveFromApiByRandom(date);
             } else {
                 String TransedText = transService.doTrans(RawText);
