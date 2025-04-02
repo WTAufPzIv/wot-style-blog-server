@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 
 @Slf4j
 @RestControllerAdvice
@@ -17,6 +19,17 @@ public class GlobalExceptionHandler {
     public ResponseResult<Void> handleUnknowException(Exception ex) {
         log.error("系统异常: {}", ex.getMessage(), ex);
         return ResponseResult.error(500, "系统异常：" + ex.getMessage());
+    }
+
+    // 参数校验抛错
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseResult<?> handleValidationException(MethodArgumentNotValidException ex) {
+        // 提取第一个错误信息（或拼接所有错误）
+        String errorMsg = ex.getBindingResult().getAllErrors().stream()
+                .findFirst()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .orElse("参数缺失");
+        return ResponseResult.error(400, errorMsg);
     }
 
     // 业务抛错

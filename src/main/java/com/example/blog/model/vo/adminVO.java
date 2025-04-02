@@ -1,24 +1,18 @@
 package com.example.blog.model.vo;
 
-public class adminVO {
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+public class AdminVO {
+    @NotBlank(message = "用户名不能为空")
     private String username;
+
+    @NotBlank(message = "密码不能为空")
     private String password;
 
-    public adminVO() {}
+    public AdminVO() {}
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 }

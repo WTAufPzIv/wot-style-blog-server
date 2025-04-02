@@ -1,15 +1,18 @@
 package com.example.blog.controller;
 
+import com.example.blog.annotation.DecryptRequestBody;
 import com.example.blog.annotation.RequestBodyValid;
 import com.example.blog.entity.Admin;
 import com.example.blog.model.dto.ResponseResult;
+import com.example.blog.model.vo.AdminVO;
 import com.example.blog.service.AdminService;
-import com.example.blog.model.vo.adminVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.MediaType;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/auroraWeb")
 public class AdminController {
@@ -20,8 +23,13 @@ public class AdminController {
     }
 
 
-    @PostMapping(value = "/adminLogin", consumes = {MediaType.TEXT_PLAIN_VALUE})
-    public ResponseResult<Admin> login(@RequestBodyValid(targetClass = adminVO.class, fields = {"username", "password"}) adminVO admin, HttpSession session) throws JsonProcessingException {
+    @PostMapping(value = "/adminLogin")
+    public ResponseResult<Admin> login(
+            @DecryptRequestBody
+                    @Valid
+            AdminVO admin, HttpSession session
+    ) {
+        log.info(admin.getUsername());
         return adminService.login(admin.getUsername(), admin.getPassword(), session);
     }
 

@@ -17,7 +17,6 @@ public class BlogService {
 
     //================= 增 =================
     public ResponseResult<Blog> createBlog(blogAddVO blogAdd) {
-//        Blog savedBlog = blogRepository.save(blog);
         Blog blog = new Blog();
         blog.setTitle(blogAdd.getTitle());
         blog.setCategory(blogAdd.getCategory());
@@ -25,7 +24,6 @@ public class BlogService {
         blog.setHeadImage(blogAdd.getHeadImage());
         blog.setMdUrl(blogAdd.getMdUrl());
         blog.setCreateTime(blogAdd.getCreateTime());
-
         Blog savedBlog = blogRepository.save(blog);
         return ResponseResult.success(savedBlog);
     }

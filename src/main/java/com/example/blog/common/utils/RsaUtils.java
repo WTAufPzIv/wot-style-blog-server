@@ -35,11 +35,4 @@ public class RsaUtils {
         byte[] data = Base64.getDecoder().decode(encryptedData);
         return new String(cipher.doFinal(data));
     }
-
-    // 生成密钥对（用于测试）
-    public static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(RSA_ALGORITHM);
-        keyPairGenerator.initialize(KEY_SIZE);
-        return keyPairGenerator.generateKeyPair();
-    }
 }

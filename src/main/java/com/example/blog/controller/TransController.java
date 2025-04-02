@@ -2,7 +2,7 @@ package com.example.blog.controller;
 
 import com.example.blog.annotation.RequestBodyValid;
 import com.example.blog.model.dto.ResponseResult;
-import com.example.blog.model.vo.transVO;
+import com.example.blog.model.vo.TransVO;
 import com.example.blog.service.TransService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.MediaType;
@@ -20,7 +20,7 @@ public class TransController {
     }
 
     @PostMapping(value = "/transText", consumes = {MediaType.TEXT_PLAIN_VALUE})
-    public ResponseResult<String> transText(@RequestBodyValid(targetClass = transVO.class, fields = {"text"}) transVO trans) throws JsonProcessingException {
+    public ResponseResult<String> transText(@RequestBodyValid(targetClass = TransVO.class, fields = {"text"}) TransVO trans) throws JsonProcessingException {
         return transService.handleTrans(trans.getText());
     }
 }
