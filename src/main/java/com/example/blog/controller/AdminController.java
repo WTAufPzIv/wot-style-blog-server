@@ -26,10 +26,9 @@ public class AdminController {
     @PostMapping(value = "/adminLogin")
     public ResponseResult<Admin> login(
             @DecryptRequestBody
-                    @Valid
+            @Valid
             AdminVO admin, HttpSession session
     ) {
-        log.info(admin.getUsername());
         return adminService.login(admin.getUsername(), admin.getPassword(), session);
     }
 

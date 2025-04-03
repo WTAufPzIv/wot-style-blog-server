@@ -1,5 +1,6 @@
 package com.example.blog.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class Blog {
 
     @Getter
     @Setter
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // 匹配前端传入格式
     private LocalDateTime createTime;
 
     @Getter

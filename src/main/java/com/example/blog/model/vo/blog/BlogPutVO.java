@@ -1,21 +1,21 @@
 package com.example.blog.model.vo.blog;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Setter
 @Getter
-public class BlogAddVO {
+public class BlogPutVO {
+    @NotBlank(message = "主键不能为空")
+    private Long id;
+
     @NotBlank(message = "标题不能为空")
     private String title;
 
-    @NonNull
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // 匹配前端传入格式
+    @NotBlank(message = "创建时间不能为空")
     private LocalDateTime createTime;
 
     @NotBlank(message = "分类不能为空")
@@ -30,6 +30,5 @@ public class BlogAddVO {
     @NotBlank(message = "markdown文件链接不能为空")
     private String mdUrl;
 
-    public BlogAddVO() {}
-
+    public BlogPutVO() {}
 }

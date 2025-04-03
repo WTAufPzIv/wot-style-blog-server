@@ -3,7 +3,7 @@ package com.example.blog.service;
 import com.example.blog.common.exception.BusinessException;
 import com.example.blog.entity.Blog;
 import com.example.blog.model.dto.ResponseResult;
-import com.example.blog.model.vo.blog.blogAddVO;
+import com.example.blog.model.vo.blog.BlogAddVO;
 import com.example.blog.repository.BlogRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public class BlogService {
     }
 
     //================= 增 =================
-    public ResponseResult<Blog> createBlog(blogAddVO blogAdd) {
+    public ResponseResult<Blog> createBlog(BlogAddVO blogAdd) {
         Blog blog = new Blog();
         blog.setTitle(blogAdd.getTitle());
         blog.setCategory(blogAdd.getCategory());

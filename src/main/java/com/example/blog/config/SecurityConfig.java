@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     // 放行路径列表（根据实际需求修改）
     private static final String[] WHITE_LIST = {
-            "/auroraWeb/*",
+            "/auroraWeb/**",
     };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

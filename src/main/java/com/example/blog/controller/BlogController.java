@@ -1,15 +1,18 @@
 package com.example.blog.controller;
 
-import com.example.blog.annotation.RequestBodyValid;
+import com.example.blog.annotation.DecryptRequestBody;
+import com.example.blog.annotation.LoginCheck;
 import com.example.blog.entity.Blog;
 import com.example.blog.model.dto.ResponseResult;
-import com.example.blog.model.vo.blog.blogAddVO;
+import com.example.blog.model.vo.blog.BlogAddVO;
 import com.example.blog.service.BlogService;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/auroraWeb")
 public class BlogController {
@@ -21,7 +24,12 @@ public class BlogController {
 
     //================= 增 =================
     @PostMapping(value = "/blog/add")
-    public ResponseResult<Blog> create(@RequestBodyValid(targetClass = blogAddVO.class, fields = {"title", "createTime", "category", "headImage", "miniDesc", "mdUrl"}) blogAddVO blogAdd) throws JsonProcessingException {
+//    @LoginCheck
+    public ResponseResult<Blog> create(
+            @DecryptRequestBody
+            @Valid
+            BlogAddVO blogAdd
+    ) {
         return blogService.createBlog(blogAdd);
     }
 
