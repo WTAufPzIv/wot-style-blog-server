@@ -25,7 +25,7 @@ public class AdminController {
 
     @PostMapping(value = "/adminLogin")
     public ResponseResult<Admin> login(
-            @DecryptRequestBody
+            @RequestBody
             @Valid
             AdminVO admin, HttpSession session
     ) {

@@ -42,8 +42,7 @@ public class AdminService {
     public ResponseResult<Admin> checkLogin(HttpSession session) {
         Admin admin = (Admin) session.getAttribute("currentUser");
         if (admin == null) {
-            throw new BusinessException(403, "账号未登录");
-//            return ResponseResult.success(null);
+            return ResponseResult.success(null);
         } else {
             return ResponseResult.success(admin);
         }

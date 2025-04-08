@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.blog.mapper.BlogMapper">
+    <select id="findBlogsByConditions" resultType="com.example.blog.entity.Blog">
+        SELECT * FROM blog
+        <where>
+            <if test="keywords != null and keywords != ''">
+                AND (title LIKE CONCAT('%', #{keywords}, '%')
+                OR mini_desc LIKE CONCAT('%', #{keywords}, '%'))
+            </if>
+            <if test="category != null and category != ''">
+                AND category LIKE CONCAT('%', #{category}, '%')
+            </if>
+            <if test="createTime != null and createTime != ''">
+                AND create_time LIKE CONCAT('%', #{createTime}, '%')
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+    <select id="findAllCategories" resultType="java.lang.String">
+        SELECT DISTINCT category
+        FROM blog
+        <where>
+            category IS NOT NULL
+            AND category != ''
+        </where>
+        ORDER BY category ASC
+    </select>
+</mapper>

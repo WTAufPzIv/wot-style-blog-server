@@ -4,13 +4,19 @@ import com.example.blog.annotation.DecryptRequestBody;
 import com.example.blog.annotation.LoginCheck;
 import com.example.blog.entity.Blog;
 import com.example.blog.model.dto.ResponseResult;
+import com.example.blog.model.vo.PageVO;
 import com.example.blog.model.vo.blog.BlogAddVO;
+import com.example.blog.model.vo.blog.BlogListGetVO;
 import com.example.blog.service.BlogService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -24,9 +30,9 @@ public class BlogController {
 
     //================= 增 =================
     @PostMapping(value = "/blog/add")
-//    @LoginCheck
+    @LoginCheck
     public ResponseResult<Blog> create(
-            @DecryptRequestBody
+            @RequestBody
             @Valid
             BlogAddVO blogAdd
     ) {
@@ -49,15 +55,19 @@ public class BlogController {
 //        return ResponseEntity.ok(blogService.updateBlog(id, blog));
 //    }
 //
-//    //================= 查所有 =================
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Blog> get(@PathVariable Long id) {
-//        return ResponseEntity.ok(blogService.getBlog(id));
-//    }
-//
-//    //================= 模糊搜索 =================
-//    @GetMapping("/search")
-//    public ResponseEntity<List<Blog>> search(@RequestParam String keyword) {
-//        return ResponseEntity.ok(blogService.searchAllFields(keyword));
-//    }
+//    //================= 分页查询 =================
+    @PostMapping(value = "/blog/list")
+    public ResponseResult<Map<String, Object>> getList(
+            @RequestBody
+            @Valid
+            BlogListGetVO listPageParams
+    ) {
+        return blogService.getBlogList(listPageParams);
+    }
+
+    //================= 查所有分类 =================
+    @PostMapping(value = "/blog/category/all")
+    public ResponseResult<List<String>> getAllCategory() {
+        return blogService.getAllCategories();
+    }
 }

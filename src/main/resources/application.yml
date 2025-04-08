@@ -1,3 +1,12 @@
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true # 自动转换下划线命名到驼峰命名
+pagehelper:
+  helper-dialect: mysql  # 根据实际数据库类型配置
+  reasonable: true       # 分页参数合理化（pageNum<=0时自动设为1）
+  support-methods-arguments: true
+  close-conn: true        # 自动关闭Connection
 spring:
   application:
     name: wot-style-blog-server

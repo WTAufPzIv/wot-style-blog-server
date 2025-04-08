@@ -1,6 +1,6 @@
 package com.example.blog.config;
 
-import com.example.blog.resolver.DecryptRequestBodyResolver;
+//import com.example.blog.resolver.DecryptRequestBodyResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,13 +17,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final ObjectMapper objectMapper;
     private final Validator validator;
 
-    @Bean
-    public DecryptRequestBodyResolver decryptRequestBodyResolver() {
-        return new DecryptRequestBodyResolver(objectMapper, validator);
-    }
+//    @Bean
+//    public DecryptRequestBodyResolver decryptRequestBodyResolver() {
+//        return new DecryptRequestBodyResolver(objectMapper, validator);
+//    }
 
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(decryptRequestBodyResolver());
-    }
+//    @Override
+//    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+//        resolvers.add(decryptRequestBodyResolver());
+//    }
 }

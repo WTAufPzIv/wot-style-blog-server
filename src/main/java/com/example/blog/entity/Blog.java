@@ -1,9 +1,11 @@
 package com.example.blog.entity;
 
+import com.example.blog.common.utils.SnowflakeIdGenerator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,7 +15,8 @@ import java.time.LocalDateTime;
 public class Blog {
     @Id
     @Getter
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "snowflake")
+    @GenericGenerator(name = "snowflake", type = SnowflakeIdGenerator.class)
     private Long id;
 
     @Getter
