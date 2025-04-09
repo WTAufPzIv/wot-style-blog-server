@@ -1,16 +1,18 @@
-package com.example.blog.model.vo.blog;
+package com.example.blog.model.vo.photograph;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
-public class BlogPutVO {
+public class PhotoPutVO {
     @NonNull
     private Long id;
 
@@ -21,17 +23,12 @@ public class BlogPutVO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // 匹配前端传入格式
     private LocalDateTime createTime;
 
-    @NotBlank(message = "分类不能为空")
-    private String category;
+    @NotBlank(message = "正文不能为空")
+    private String content;
 
-    @NotBlank(message = "头图不能为空")
-    private String headImage;
+    @NonNull
+    @NotEmpty(message = "图片不能为空")
+    private List<String> images;
 
-    @NotBlank(message = "描述不能为空")
-    private String miniDesc;
-
-    @NotBlank(message = "markdown文件链接不能为空")
-    private String mdUrl;
-
-    public BlogPutVO() {}
+    public PhotoPutVO() {}
 }

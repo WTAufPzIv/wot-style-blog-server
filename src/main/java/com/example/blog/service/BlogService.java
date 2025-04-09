@@ -5,7 +5,9 @@ import com.example.blog.common.utils.PaginationUtils;
 import com.example.blog.entity.Blog;
 import com.example.blog.model.dto.ResponseResult;
 import com.example.blog.model.vo.blog.BlogAddVO;
+import com.example.blog.model.vo.blog.BlogDelVO;
 import com.example.blog.model.vo.blog.BlogListGetVO;
+import com.example.blog.model.vo.blog.BlogPutVO;
 import com.example.blog.repository.BlogRepository;
 import com.example.blog.mapper.BlogMapper;
 import com.github.pagehelper.Page;
@@ -46,7 +48,8 @@ public class BlogService {
     }
 
     //================= 删 =================
-    public ResponseResult<Boolean> deleteBlog(Long id) {
+    public ResponseResult<Boolean> deleteBlog(BlogDelVO blogDel) {
+        Long id = blogDel.getId();
         if (!blogRepository.existsById(id)) {
             throw new BusinessException(404, "博客不存在");
         }
@@ -55,16 +58,17 @@ public class BlogService {
     }
 
     //================= 改 =================
-    public ResponseResult<Blog> updateBlog(Long id, Blog newBlog) {
+    public ResponseResult<Blog> updateBlog(BlogPutVO blogPut) {
+        Long id = blogPut.getId();
         Blog putedBlog = blogRepository.findById(id)
                 .map(existingBlog -> {
                     // 仅更新允许修改的字段
-                    existingBlog.setTitle(newBlog.getTitle());
-                    existingBlog.setCategory(newBlog.getCategory());
-                    existingBlog.setMiniDesc(newBlog.getMiniDesc());
-                    existingBlog.setHeadImage(newBlog.getHeadImage());
-                    existingBlog.setCreateTime(newBlog.getCreateTime());
-                    existingBlog.setMdUrl(newBlog.getMdUrl());
+                    existingBlog.setTitle(blogPut.getTitle());
+                    existingBlog.setCategory(blogPut.getCategory());
+                    existingBlog.setMiniDesc(blogPut.getMiniDesc());
+                    existingBlog.setHeadImage(blogPut.getHeadImage());
+                    existingBlog.setCreateTime(blogPut.getCreateTime());
+                    existingBlog.setMdUrl(blogPut.getMdUrl());
                     return blogRepository.save(existingBlog);
                 })
                 .orElseThrow(() -> new BusinessException(404, "博客不存在"));
