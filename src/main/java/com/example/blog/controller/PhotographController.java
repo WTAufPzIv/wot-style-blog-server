@@ -64,7 +64,7 @@ public class PhotographController {
         return photographService.getPhotoList();
     }
 
-    @PostMapping(value = "/photograph/get")
+    @PostMapping(value = "/photograph/detail")
     public ResponseResult<Photograph> getPhotoById(
             @RequestBody
             @Valid
