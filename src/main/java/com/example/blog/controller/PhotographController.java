@@ -5,6 +5,7 @@ import com.example.blog.entity.Photograph;
 import com.example.blog.model.dto.ResponseResult;
 import com.example.blog.model.vo.photograph.PhotoAddVO;
 import com.example.blog.model.vo.photograph.PhotoDelVO;
+import com.example.blog.model.vo.photograph.PhotoDetailGetVO;
 import com.example.blog.model.vo.photograph.PhotoPutVO;
 import com.example.blog.service.PhotographService;
 import jakarta.validation.Valid;
@@ -68,8 +69,8 @@ public class PhotographController {
     public ResponseResult<Photograph> getPhotoById(
             @RequestBody
             @Valid
-            Long id
+            PhotoDetailGetVO photoDetailGetVO
     ) {
-        return photographService.getPhotoById(id);
+        return photographService.getPhotoById(photoDetailGetVO);
     }
 }

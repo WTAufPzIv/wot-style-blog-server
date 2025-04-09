@@ -6,6 +6,7 @@ import com.example.blog.entity.Photograph;
 import com.example.blog.model.dto.ResponseResult;
 import com.example.blog.model.vo.photograph.PhotoAddVO;
 import com.example.blog.model.vo.photograph.PhotoDelVO;
+import com.example.blog.model.vo.photograph.PhotoDetailGetVO;
 import com.example.blog.model.vo.photograph.PhotoPutVO;
 import com.example.blog.repository.PhotographRepository;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,8 @@ public class PhotographService {
         return ResponseResult.success(putedBlog);
     }
 
-    public ResponseResult<Photograph> getPhotoById(Long id) {
+    public ResponseResult<Photograph> getPhotoById(PhotoDetailGetVO photoDetailGetVO) {
+        Long id = photoDetailGetVO.getId();
         Photograph photograph = photographRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(404, "记录不存在"));
         return ResponseResult.success(photograph);
