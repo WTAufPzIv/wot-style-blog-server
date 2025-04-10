@@ -6,4 +6,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class NoteListGetVO {
+    private String createTime;
+
+    public NoteListGetVO() {
+    }
 }

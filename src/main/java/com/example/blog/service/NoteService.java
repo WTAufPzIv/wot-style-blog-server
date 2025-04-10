@@ -2,9 +2,11 @@ package com.example.blog.service;
 
 import com.example.blog.common.exception.BusinessException;
 import com.example.blog.entity.Note;
+import com.example.blog.mapper.NoteMapper;
 import com.example.blog.model.dto.ResponseResult;
 import com.example.blog.model.vo.note.NoteAddVO;
 import com.example.blog.model.vo.note.NoteDelVO;
+import com.example.blog.model.vo.note.NoteListGetVO;
 import com.example.blog.model.vo.note.NotePutVO;
 import com.example.blog.repository.NoteRepository;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,11 @@ import java.util.List;
 @Service
 public class NoteService {
     NoteRepository noteRepository;
+    NoteMapper noteMapper;
 
-    public NoteService(NoteRepository noteRepository) {
+    public NoteService(NoteRepository noteRepository, NoteMapper noteMapper) {
         this.noteRepository = noteRepository;
+        this.noteMapper = noteMapper;
     }
 
     public ResponseResult<Note> createNote(NoteAddVO noteAdd) {
@@ -51,8 +55,9 @@ public class NoteService {
         return ResponseResult.success(putedNote);
     }
 
-    public ResponseResult<List<Note>> getNoteList() {
-        return ResponseResult.success(noteRepository.findAll());
+    public ResponseResult<List<Note>> getNoteList(NoteListGetVO noteListGet) {
+        List<Note> notes= noteMapper.findNotesByConditions(noteListGet.getCreateTime());
+        return ResponseResult.success(notes);
     }
 
     public ResponseResult<Note> getNoteById(NoteDelVO noteDel) {
@@ -60,5 +65,10 @@ public class NoteService {
         Note note = noteRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(404, "记录不存在"));
         return ResponseResult.success(note);
+    }
+
+    public ResponseResult<List<String>> getAllCreateTime() {
+        List<String> creatTimes = noteMapper.findAllCreatTime();
+        return ResponseResult.success(creatTimes);
     }
 }

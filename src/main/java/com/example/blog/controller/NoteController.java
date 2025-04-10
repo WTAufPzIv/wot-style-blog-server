@@ -5,6 +5,7 @@ import com.example.blog.entity.Note;
 import com.example.blog.model.dto.ResponseResult;
 import com.example.blog.model.vo.note.NoteAddVO;
 import com.example.blog.model.vo.note.NoteDelVO;
+import com.example.blog.model.vo.note.NoteListGetVO;
 import com.example.blog.model.vo.note.NotePutVO;
 import com.example.blog.service.NoteService;
 import jakarta.validation.Valid;
@@ -61,8 +62,12 @@ public class NoteController {
 
     //================= 查所有 =================
     @PostMapping("/note/list")
-    public ResponseResult<List<Note>> getNoteList(){
-        return noteService.getNoteList();
+    public ResponseResult<List<Note>> getNoteList(
+            @RequestBody
+            @Valid
+            NoteListGetVO noteListGet
+    ){
+        return noteService.getNoteList(noteListGet);
     }
 
     //================= id查询 =================
@@ -73,5 +78,11 @@ public class NoteController {
             NoteDelVO noteDel
     ){
         return noteService.getNoteById(noteDel);
+    }
+
+    //================= 查询所有创建时间 =================
+    @PostMapping("/note/createTime/all")
+    public ResponseResult<List<String>> getAllCreateTime(){
+        return noteService.getAllCreateTime();
     }
 }

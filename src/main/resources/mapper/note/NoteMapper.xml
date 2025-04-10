@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.blog.mapper.NoteMapper">
+    <select id="findNotesByConditions" resultType="com.example.blog.entity.Note">
+        SELECT * FROM note
+        <where>
+            <if test="createTime != null and createTime != ''">
+                AND create_time LIKE CONCAT('%', #{createTime}, '%')
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+    <select id="findAllCreatTime" resultType="java.lang.String">
+        SELECT DISTINCT create_time
+        FROM note
+        <where>
+            create_time IS NOT NULL
+            AND create_time != ''
+        </where>
+        ORDER BY category ASC
+    </select>
+</mapper>
