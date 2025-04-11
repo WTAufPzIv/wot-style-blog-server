@@ -4,9 +4,9 @@
     <select id="findNotesByConditions" resultType="com.example.blog.entity.Note">
         SELECT * FROM note
         <where>
-            <if test="createTime != null and createTime != ''">
-                AND create_time LIKE CONCAT('%', #{createTime}, '%')
-            </if>
+<!--            <if test="createTime != null and createTime != ''">-->
+<!--                AND create_time LIKE CONCAT('%', #{createTime}, '%')-->
+<!--            </if>-->
         </where>
         ORDER BY create_time DESC
     </select>

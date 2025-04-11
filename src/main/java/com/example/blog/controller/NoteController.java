@@ -3,10 +3,7 @@ package com.example.blog.controller;
 import com.example.blog.annotation.LoginCheck;
 import com.example.blog.entity.Note;
 import com.example.blog.model.dto.ResponseResult;
-import com.example.blog.model.vo.note.NoteAddVO;
-import com.example.blog.model.vo.note.NoteDelVO;
-import com.example.blog.model.vo.note.NoteListGetVO;
-import com.example.blog.model.vo.note.NotePutVO;
+import com.example.blog.model.vo.note.*;
 import com.example.blog.service.NoteService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -62,7 +59,7 @@ public class NoteController {
 
     //================= 查所有 =================
     @PostMapping("/note/list")
-    public ResponseResult<List<Note>> getNoteList(
+    public ResponseResult<List<NoteItemDO>> getNoteList(
             @RequestBody
             @Valid
             NoteListGetVO noteListGet
